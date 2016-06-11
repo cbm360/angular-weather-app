@@ -47,12 +47,31 @@ weatherApp.controller('forecastController', ['$scope', '$resource', '$routeParam
 
     $scope.days = $routeParams.days || 2;
 
-    $scope.weatherAPI = $resource("http://api.openweathermap.org/data/2.5/forecast/daily?appid=6a70be23b6e0f8534a927ec417e02021&units=imperial");
+    $scope.weatherAPI = $resource("http://api.openweathermap.org/data/2.5/forecast/daily?appid=6a70be23b6e0f8534a927ec417e02021");
 
     $scope.weatherResult = $scope.weatherAPI.get({ q: $scope.city, cnt: $scope.days });
+
+    $scope.convertToFahrenheit = function(degK) {
+        return Math.round((1.8 * (degK - 273)) + 32);
+    }
 
     $scope.convertToDate = function(dt) {
         return new Date(dt * 1000);
     };
 
 }]);
+
+// DIRECTIVES
+weatherApp.directive("weatherReport", function() {
+   return {
+       restrict: 'E',
+       templateUrl: 'directives/weatherReport.html',
+       replace: true,
+       scope: {
+           weatherDay: "=",
+           convertToStandard: "&",
+           convertToDate: "&",
+           dateFormat: "@"
+       }
+   }
+});
